@@ -107,6 +107,7 @@ This guide will walk you through setting up a Django project named `core` and cr
        )
 
        context = {"sza_gt": sza_gt.as_raw_html()}
+
        return render(request, "gt/index.html", context)
    ```
 
