@@ -151,3 +151,5 @@ This guide will walk you through setting up a Django project named `core` and cr
    ```
 
 You should now see the well-rendered table displayed in your browser.
+
+![image](https://github.com/user-attachments/assets/ddccc7cd-e9db-4d31-8599-dd3e4402a910)
