@@ -28,4 +28,5 @@ def index(request):
     )
 
     context = {"sza_gt": sza_gt.as_raw_html()}
+
     return render(request, "gt/index.html", context)
