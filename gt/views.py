@@ -1,12 +1,19 @@
+from functools import cache
+
 import polars as pl
 from django.shortcuts import render
 from great_tables import GT, html
 from great_tables.data import sza
 
 
+@cache
+def get_sza():
+    return pl.from_pandas(sza)
+
+
 def index(request):
     sza_pivot = (
-        pl.from_pandas(sza)
+        get_sza()
         .filter((pl.col("latitude") == "20") & (pl.col("tst") <= "1200"))
         .select(pl.col("*").exclude("latitude"))
         .drop_nulls()
