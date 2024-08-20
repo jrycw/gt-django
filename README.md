@@ -76,7 +76,15 @@ This guide will walk you through setting up a Django project named `core` and cr
    Edit the `gt/views.py` file to define the `index` view. This view will generate an HTML table using `GT.as_raw_html()`:
 
    ```python
-   # gt/views.py
+    # gt/views.py
+
+    from functools import cache
+
+    import polars as pl
+    from django.shortcuts import render
+    from great_tables import GT, html
+    from great_tables.data import sza
+
 
     @cache
     def get_sza():
@@ -150,6 +158,62 @@ This guide will walk you through setting up a Django project named `core` and cr
    ```bash
    python manage.py runserver
    ```
+
+### Alternative steps
+If you prefer not to use the `safe` template tag method, you can adopt the `mark_safe()` approach in the view instead. Here’s a possible implementation for your reference:
+
+   ```python
+    # gt/views.py
+
+    from functools import cache
+
+    import polars as pl
+    from django.shortcuts import render
+    from django.utils.safestring import mark_safe
+    from great_tables import GT, html
+    from great_tables.data import sza
+
+
+    def mark_gt_safe(gt):
+        if isinstance(gt, GT):
+            return mark_safe(gt.as_raw_html())
+        return gt
+
+
+    @cache
+    def get_sza():
+        return pl.from_pandas(sza)
+
+
+    def index(request):
+        sza_pivot = (
+            get_sza()
+            .filter((pl.col("latitude") == "20") & (pl.col("tst") <= "1200"))
+            .select(pl.col("*").exclude("latitude"))
+            .drop_nulls()
+            .pivot(values="sza", index="month", on="tst", sort_columns=True)
+        )
+
+        sza_gt = (
+            GT(sza_pivot, rowname_col="month")
+            .data_color(
+                domain=[90, 0],
+                palette=["rebeccapurple", "white", "orange"],
+                na_color="white",
+            )
+            .tab_header(
+                title="Solar Zenith Angles from 05:30 to 12:00",
+                subtitle=html("Average monthly values at latitude of 20&deg;N."),
+            )
+            .sub_missing(missing_text="")
+        )
+
+        context = {"sza_gt": mark_gt_safe(sza_gt)}
+
+        return render(request, "gt/index.html", context)
+   ```
+
+By doing this, you can use `{{ sza_gt }}` instead of `{{ sza_gt | safe }}` in the template.
 
 You should now see the table displayed in your browser at http://127.0.0.1:8000.
 
