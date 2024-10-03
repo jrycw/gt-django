@@ -217,4 +217,4 @@ By doing this, you can use `{{ sza_gt }}` instead of `{{ sza_gt | safe }}` in th
 
 You should now see the table displayed in your browser at http://127.0.0.1:8000.
 
-![image](https://github.com/user-attachments/assets/ddccc7cd-e9db-4d31-8599-dd3e4402a910)
+![table](https://raw.githubusercontent.com/jrycw/gt-django/refs/heads/master/gt-django.png)
