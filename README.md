@@ -2,7 +2,7 @@
 
 ### Introduction
 
-This guide will walk you through setting up a Django project named `core` and creating a simple application, `gt`, which will render a table using the `GT` library.
+This guide will walk you through setting up a Django project named `core` and creating a simple application, `gt`, which will render a table using the `Great Tables` library.
 
 ### Steps
 
